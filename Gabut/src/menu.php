@@ -117,7 +117,6 @@ do {
             echo "Total Price: Rp. {$totalPrice}\n";
 
         default:
-            echo "Invalid selection. Please choose a number between 1 and 6.\n";
             continue;  
     }
 } while (true); 
