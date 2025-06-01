@@ -20,7 +20,7 @@ with tab1:
         df["Credit amount"] = pd.to_numeric(df["Credit amount"], errors='coerce')
 
         # Binary target
-        df["Risk_binary"] = df["Credit amount"].apply(lambda x: "good" if x >= 100  00 else "bad")
+        df["Risk_binary"] = df["Credit amount"].apply(lambda x: "good" if x >= 10000 else "bad")
         le = LabelEncoder()
         df["Risk_binary"] = le.fit_transform(df["Risk_binary"])
 
