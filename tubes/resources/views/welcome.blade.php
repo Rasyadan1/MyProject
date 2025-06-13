@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Selamat Datang - Sistem Manajemen Pengguna</title>
+    <title>Selamat Datang - Service Laptop</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
     <style>
         body {
@@ -61,7 +61,7 @@
 <body>
     <div class="container">
         <h1>Selamat Datang di Service Center Kelompok 4</h1>
-        <p>Silakan klik tombol di bawah untuk menuju halaman pengelolaan pengguna.</p>
+        <p>Silakan klik tombol di bawah untuk menuju halaman Booking Service Laptop.</p>
         <a href="{{ route('customers.index') }}" class="btn">Booking Sekarang!</a>
     </div>
 </body>

@@ -25,8 +25,11 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers,email',
             'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:255',
             'booking_date' => 'nullable|date',
+            'laptop_brand' => 'nullable|string|max:255',
+            'laptop_type' => 'nullable|string|max:255',
+            'service_type' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         Customer::create($request->all());
@@ -40,27 +43,40 @@ class CustomerController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email,' . $id,
-            'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:255',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:customers,email,' . $id,
+        'phone' => 'nullable|string|max:15',
+        'address' => 'nullable|string|max:255', // Tambahkan ini
+        'booking_date' => 'nullable|date',
+        'laptop_brand' => 'nullable|string|max:255',
+        'laptop_type' => 'nullable|string|max:255',
+        'service_type' => 'nullable|string|max:255',
+        'notes' => 'nullable|string|max:1000',
+    ]);
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
+
         $customer = Customer::findOrFail($id);
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
-        $customer->city = $request->city;
+        $customer->booking_date = $request->booking_date;
+        $customer->laptop_brand = $request->laptop_brand;
+        $customer->laptop_type = $request->laptop_type;
+        $customer->service_type = $request->service_type;
+        $customer->notes = $request->notes;
         $customer->save();
+
         return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.

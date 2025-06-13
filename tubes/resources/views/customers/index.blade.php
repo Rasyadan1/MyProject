@@ -1,55 +1,82 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Booking Customer')
+@section('title', 'Dashboard Booking Customer')
 
 @section('content')
-<div style="max-width: 1100px; margin: 30px auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <h2 style="margin: 0; color: #222;">Daftar Booking Customer</h2>
-        <!-- Tombol Tambah Customer dihapus -->
+<div class="container-fluid py-4 px-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">📋 Dashboard Booking Customer</h3>
     </div>
-    <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); padding: 24px;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">No</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Nama Customer</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Email</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Telepon</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Alamat</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Tanggal Booking</th>
-                    <th style="padding: 14px; text-align: left; background-color: #f4f6f9; color: #333; border-bottom: 2px solid #e0e0e0;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach($customers as $customer)
-                <tr style="background-color: #fafbfc; border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px;">{{ $loop->iteration }}</td>
-                    <td style="padding: 12px;">{{ $customer->name }}</td>
-                    <td style="padding: 12px;">{{ $customer->email }}</td>
-                    <td style="padding: 12px;">{{ $customer->phone }}</td>
-                    <td style="padding: 12px;">{{ $customer->address }}</td>
-                    <td style="padding: 12px;">{{ $customer->booking_date ?? '-' }}</td>
-                    <td style="padding: 12px;">
-                        @if(isset($customer->status))
-                            <span style="padding: 4px 10px; border-radius: 4px; background: {{ $customer->status == 'confirmed' ? '#4caf50' : '#ffc107' }}; color: #fff;">
-                                {{ ucfirst($customer->status) }}
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-hover align-middle text-nowrap">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Tgl Booking</th>
+                        <th>Merk</th>
+                        <th>Tipe</th>
+                        <th>Jenis Servis</th>
+                        <th>Catatan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse($customers as $customer)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $customer->name }}</td>
+                        <td>{{ $customer->email }}</td>
+                        <td>{{ $customer->phone }}</td>
+                        <td>{{ $customer->address }}</td>
+                        <td>
+                            {{ $customer->booking_date 
+                                ? \Carbon\Carbon::parse($customer->booking_date)->format('d M Y') 
+                                : '-' }}
+                        </td>
+                        <td>{{ $customer->laptop_brand ?? '-' }}</td>
+                        <td>{{ $customer->laptop_type ?? '-' }}</td>
+                        <td>
+                            <span class="badge bg-info text-dark">
+                                {{ $customer->service_type ?? '-' }}
                             </span>
-                        @else
-                            <span style="color: #888;">-</span>
-                        @endif
-                    </td>
-                    <td style="padding: 12px;">
-                        <a href="{{ route('customers.edit', $customer->id) }}" style="padding: 8px 16px; font-size: 14px; border-radius: 5px; background-color: #ffa500; color: white; border: none; cursor: pointer; text-decoration: none; margin-right: 6px; box-shadow: 0 1px 4px rgba(255,165,0,0.10);">Edit</a>
-                        <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" style="padding: 8px 16px; font-size: 14px; border-radius: 5px; background-color: #f44336; color: white; border: none; cursor: pointer; text-decoration: none; box-shadow: 0 1px 4px rgba(244,67,54,0.10);" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+                        </td>
+                        <td>{{ $customer->notes ?? '-' }}</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="11" class="text-center text-muted">Tidak ada data booking saat ini.</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection
